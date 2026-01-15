@@ -1,0 +1,13 @@
+{
+  "name": "Microkernel Node Server",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "forwardPorts": [3000],
+  "postCreateCommand": "cd server && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint"]
+    }
+  }
+}
