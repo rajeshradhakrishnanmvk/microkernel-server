@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: monospace">
+  <h3>Microkernel LLM Demo</h3>
+  <textarea id="q" rows="4" cols="60"></textarea><br><br>
+  <button onclick="run()">Run LLM</button>
+  <pre id="out"></pre>
+
+  <script>
+    async function run() {
+      const prompt = q.value;
+      const res = await fetch("/run/llm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+      const json = await res.json();
+      out.textContent = JSON.stringify(json, null, 2);
+    }
+  </script>
+</body>
+</html>
