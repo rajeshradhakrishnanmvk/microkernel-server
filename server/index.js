@@ -72,7 +72,7 @@ app.post("/boot", async (_, res) => {
 });
 
 app.post("/run/:plugin", async (req, res) => {
-  const result = await kernel.run(req.params.plugin, req.body.prompt);
+  const result = await kernel.run(req.params.plugin, req.body);
   res.json(result);
 });
 
