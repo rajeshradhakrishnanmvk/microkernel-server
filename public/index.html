@@ -37,6 +37,12 @@
     background: #222;
   }
 
+  button.active {
+    background: #00ff66;
+    color: #000;
+    border-color: #00ff66;
+  }
+
   textarea {
     width: 100%;
     height: 70px;
@@ -54,6 +60,118 @@
     min-height: 80px;
     overflow: auto;
   }
+
+  .plugin-card {
+    border: 1px solid #444;
+    padding: 10px;
+    margin: 8px 0;
+    background: #1a1a1a;
+  }
+
+  .plugin-card.loaded {
+    border-color: #00ff66;
+    background: #001a00;
+  }
+
+  .plugin-name {
+    font-weight: bold;
+    color: #00ff66;
+  }
+
+  .plugin-status {
+    font-size: 11px;
+    color: #888;
+    margin-top: 5px;
+  }
+
+  .plugin-status.active {
+    color: #00ff66;
+  }
+
+  .plugin-status.crashed {
+    color: #ff4444;
+  }
+
+  .billboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 12px;
+  }
+
+  .billboard {
+    border: 1px solid #333;
+    background: #111;
+    padding: 12px;
+    min-height: 200px;
+  }
+
+  .billboard-header {
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #00ff66;
+  }
+
+  .billboard-messages {
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  .message {
+    margin: 6px 0;
+    padding: 6px;
+    border-left: 2px solid #555;
+    background: #0a0a0a;
+    font-size: 12px;
+  }
+
+  .message.assistant {
+    border-left-color: #00aaff;
+  }
+
+  .message-role {
+    font-size: 9px;
+    color: #888;
+    text-transform: uppercase;
+  }
+
+  .section {
+    display: none;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+
+  .tab {
+    background: #1a1a1a;
+    color: #888;
+    border: 1px solid #333;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+
+  .tab.active {
+    background: #00ff66;
+    color: #000;
+    border-color: #00ff66;
+  }
+
+  input[type="text"], input[type="number"] {
+    background: #000;
+    color: #00ff66;
+    border: 1px solid #444;
+    padding: 6px;
+    font-family: monospace;
+    margin-right: 6px;
+  }
 </style>
 </head>
 
@@ -61,20 +179,55 @@
 
 <h1>🧠 Slop Architecture – Browser Microkernel</h1>
 
-<div class="bar">
-  <button onclick="bootKernel()">Boot Kernel</button>
-  <button onclick="runRogue()">Run Rogue Plugin</button>
-  <button onclick="systemReport()">System Report</button>
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('kernel')">Kernel</button>
+  <button class="tab" onclick="switchTab('marketplace')">Plugin Marketplace</button>
+  <button class="tab" onclick="switchTab('billboards')">Billboards</button>
 </div>
 
-<div class="bar">
-  <textarea id="prompt">What is SLP?</textarea><br><br>
-  <button onclick="runLLM()">Run LLM</button>
+<!-- Kernel Section -->
+<div id="kernel" class="section active">
+  <div class="bar">
+    <button onclick="bootKernel()">Boot Kernel</button>
+    <button onclick="runRogue()">Run Rogue Plugin</button>
+    <button onclick="systemReport()">System Report</button>
+  </div>
+
+  <div class="bar">
+    <textarea id="prompt">What is SLP?</textarea><br><br>
+    <button onclick="runLLM()">Run LLM</button>
+  </div>
+
+  <div class="bar">
+    <strong>Output</strong>
+    <pre id="output"></pre>
+  </div>
 </div>
 
-<div class="bar">
-  <strong>Output</strong>
-  <pre id="output"></pre>
+<!-- Plugin Marketplace Section -->
+<div id="marketplace" class="section">
+  <div class="bar">
+    <h2 style="font-size: 16px; margin-bottom: 10px;">Available Plugins</h2>
+    <div id="pluginList"></div>
+  </div>
+</div>
+
+<!-- Billboards Section -->
+<div id="billboards" class="section">
+  <div class="bar">
+    <input type="text" id="billboardTitle" placeholder="Billboard Title" />
+    <input type="text" id="billboardTopic" placeholder="Topic" />
+    <input type="number" id="conversationTurns" value="3" min="1" max="10" style="width: 60px;" />
+    <button onclick="createBillboard()">Create Billboard</button>
+    <button onclick="generateConversation()">Generate AI Conversation</button>
+    <button onclick="refreshBillboards()">Refresh</button>
+  </div>
+
+  <div class="bar">
+    <div id="billboardGrid" class="billboard-grid">
+      <p style="color: #888;">Load the Billboard plugin from the Marketplace first.</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -84,7 +237,275 @@ function log(msg) {
   out.textContent += msg + "\n";
 }
 
-// ---- UI actions mapped to kernel syscalls ----
+// ========== Tab Management ==========
+function switchTab(tabName) {
+  // Update tab buttons
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.classList.add('active');
+
+  // Update sections
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.remove('active');
+  });
+  document.getElementById(tabName).classList.add('active');
+
+  // Load data when switching tabs
+  if (tabName === 'marketplace') {
+    loadPluginMarketplace();
+  } else if (tabName === 'billboards') {
+    refreshBillboards();
+  }
+}
+
+// ========== Plugin Marketplace ==========
+const availablePlugins = [
+  {
+    name: 'billboard',
+    displayName: 'Billboard Plugin',
+    description: 'Create and manage AI-powered conversation billboards',
+    loaded: false
+  },
+  {
+    name: 'llm',
+    displayName: 'OpenAI LLM',
+    description: 'GPT-3.5 integration for AI responses',
+    loaded: true,
+    corePlugin: true
+  },
+  {
+    name: 'infinite',
+    displayName: 'Infinite Loop (Demo)',
+    description: 'Demonstrates plugin crash handling',
+    loaded: true,
+    corePlugin: true
+  }
+];
+
+async function loadPluginMarketplace() {
+  const status = await fetch('/status').then(r => r.json());
+  
+  // Update loaded status based on kernel
+  availablePlugins.forEach(plugin => {
+    plugin.loaded = status[plugin.name] !== undefined;
+    plugin.status = status[plugin.name];
+  });
+
+  const list = document.getElementById('pluginList');
+  list.innerHTML = availablePlugins.map(plugin => `
+    <div class="plugin-card ${plugin.loaded ? 'loaded' : ''}">
+      <div class="plugin-name">${plugin.displayName}</div>
+      <div style="font-size: 11px; color: #aaa; margin: 5px 0;">${plugin.description}</div>
+      <div class="plugin-status ${plugin.status === 'ACTIVE' ? 'active' : (plugin.status ? 'crashed' : '')}">
+        ${plugin.loaded ? `Status: ${plugin.status}` : 'Not loaded'}
+      </div>
+      <div style="margin-top: 8px;">
+        ${plugin.corePlugin 
+          ? '<span style="color: #888; font-size: 11px;">Core Plugin</span>'
+          : `<button onclick="togglePlugin('${plugin.name}')" ${plugin.loaded ? '' : ''}>
+               ${plugin.loaded ? 'Unload' : 'Load'}
+             </button>`
+        }
+      </div>
+    </div>
+  `).join('');
+}
+
+async function togglePlugin(pluginName) {
+  const plugin = availablePlugins.find(p => p.name === pluginName);
+  
+  if (plugin.loaded) {
+    // Unload plugin
+    const res = await fetch(`/plugin/${pluginName}`, { method: 'DELETE' });
+    if (res.ok) {
+      log(`Plugin ${pluginName} unloaded`);
+    }
+  } else {
+    // Load plugin
+    const res = await fetch(`/plugin/${pluginName}`, { method: 'POST' });
+    if (res.ok) {
+      log(`Plugin ${pluginName} loaded`);
+    }
+  }
+  
+  await loadPluginMarketplace();
+}
+
+// ========== Billboard Management ==========
+let billboards = [];
+
+async function createBillboard() {
+  const title = document.getElementById('billboardTitle').value || 'Untitled Billboard';
+  
+  try {
+    const res = await fetch('/run/billboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'create',
+        title,
+        description: ''
+      })
+    });
+    
+    const data = await res.json();
+    if (data.result) {
+      await refreshBillboards();
+      document.getElementById('billboardTitle').value = '';
+    } else {
+      alert('Billboard plugin not loaded. Load it from the Marketplace first.');
+    }
+  } catch (err) {
+    console.error('Failed to create billboard:', err);
+    alert('Error: ' + err.message);
+  }
+}
+
+async function generateConversation() {
+  const topic = document.getElementById('billboardTopic').value;
+  const turns = parseInt(document.getElementById('conversationTurns').value) || 3;
+  
+  if (!topic) {
+    alert('Please enter a conversation topic');
+    return;
+  }
+
+  try {
+    // First create a billboard
+    const title = `AI: ${topic}`;
+    const res1 = await fetch('/run/billboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'create',
+        title,
+        description: `Auto-generated conversation about: ${topic}`
+      })
+    });
+    
+    const createData = await res1.json();
+
+    if (!createData.result || !createData.result.id) {
+      console.error('Failed to create billboard:', createData);
+      alert('Failed to create billboard. Make sure the Billboard plugin is loaded.');
+      return;
+    }
+    
+    const billboardId = createData.result.id;
+    
+    // Generate conversation turns
+    for (let i = 0; i < turns; i++) {
+      const prompt = i === 0 
+        ? `You are starting a conversation about "${topic}". Give an opening statement or question (2-3 sentences max).`
+        : `Continue the conversation about "${topic}". Respond naturally to the previous message (2-3 sentences max).`;
+      
+      // Get AI response
+      const res2 = await fetch('/run/llm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+      
+      const llmData = await res2.json();
+      
+      if (llmData.error || !llmData.result) {
+        console.error('LLM error:', llmData.error);
+        alert('Failed to generate AI response: ' + (llmData.error || 'Unknown error'));
+        return;
+      }
+      
+      const content = llmData.result;
+      
+      // Add message to billboard
+      await fetch('/run/billboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'addMessage',
+          id: billboardId,
+          role: i % 2 === 0 ? 'user' : 'assistant',
+          content
+        })
+      });
+      
+      await refreshBillboards();
+    }
+    
+    document.getElementById('billboardTopic').value = '';
+  } catch (err) {
+    console.error('Generation error:', err);
+    alert('Error: ' + err.message);
+  }
+}
+
+async function refreshBillboards() {
+  try {
+    const res = await fetch('/run/billboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'list' })
+    });
+    
+    const data = await res.json();
+    billboards = data.result || [];
+    renderBillboards();
+  } catch (err) {
+    console.error('Failed to refresh:', err);
+  }
+}
+
+async function deleteBillboard(id) {
+  try {
+    await fetch('/run/billboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', id })
+    });
+    await refreshBillboards();
+  } catch (err) {
+    console.error('Failed to delete:', err);
+  }
+}
+
+function renderBillboards() {
+  const grid = document.getElementById('billboardGrid');
+  
+  if (billboards.length === 0) {
+    grid.innerHTML = '<p style="color: #888;">No billboards yet. Create one to get started.</p>';
+    return;
+  }
+  
+  grid.innerHTML = billboards.map(billboard => `
+    <div class="billboard">
+      <div class="billboard-header">
+        #${billboard.id} ${escapeHtml(billboard.title)}
+      </div>
+      <div class="billboard-messages">
+        ${billboard.messages.length === 0 
+          ? '<p style="color: #666;">No messages yet</p>'
+          : billboard.messages.map(msg => `
+            <div class="message ${msg.role}">
+              <div class="message-role">[${msg.role}]</div>
+              <div>${escapeHtml(msg.content)}</div>
+            </div>
+          `).join('')
+        }
+      </div>
+      <div style="margin-top: 8px;">
+        <button onclick="deleteBillboard(${billboard.id})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ========== Kernel Actions (Original) ==========
 
 async function bootKernel() {
   out.textContent = "";

@@ -9,6 +9,11 @@ export class AIMicrokernel {
     this.status[name] = "REGISTERED";
   }
 
+  unregister(name) {
+    delete this.plugins[name];
+    delete this.status[name];
+  }
+
   async boot() {
     for (const name in this.plugins) {
       try {
