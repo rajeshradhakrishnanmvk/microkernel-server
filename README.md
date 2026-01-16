@@ -270,6 +270,41 @@ Crucially, these can be added **without changing the UI**.
 
 ---
 
+## Medicine Product Ideas (Brainstorm)
+
+* **Supervised Polypharmacy Guard** — runs interaction, contraindication, and dosing checks as isolated plugins with explicit failure states.
+* **Adaptive Adherence Companion** — predicts adherence risk and suggests interventions without blocking primary care workflows.
+* **Cold-Chain Integrity Sentinel** — monitors storage telemetry and quarantines suspect batches before dispensing.
+* **Clinical Trial Fit Scout** — summarizes eligibility gaps while exposing uncertainty and data freshness.
+
+---
+
+## Proposed Project: Supervised Medication Optimization Console
+
+### Goal
+Provide a clinician-facing console that runs supervised medication checks as plugins, keeping AI recommendations explicit, bounded, and reviewable.
+
+### Core Features (Slop Architecture Fit)
+* microkernel-enforced execution budgets with plugin quarantine on timeout
+* modular medication checks (interactions, renal dosing, formulary cost) as independent plugins
+* explicit system state and audit logs for every recommendation
+* human review queue that treats failures as first-class outcomes
+
+### Roadmap
+* **Phase 0: Scope & Data** — map required inputs, define data contracts, identify trusted sources.
+* **Phase 1: Kernel Baseline** — finalize plugin contract, add per-plugin budgets, expose health/status endpoints.
+* **Phase 2: Plugin Suite** — implement interaction, dosing, and evidence summarization plugins with supervised execution.
+* **Phase 3: UI Workflow** — build console flows for regimen checks, status inspection, and manual overrides.
+* **Phase 4: Pilot & Metrics** — run a limited pilot with audit review and feedback loops.
+
+### Task Backlog (Aligned to Slop Architecture)
+* **Kernel**: define plugin metadata schema, add timeout/quarantine policy knobs, emit structured status snapshots.
+* **Plugins**: build interaction checker, renal/hepatic dosing guard, formulary cost estimator, and evidence summarizer.
+* **UI**: add regimen intake form, execution timeline view, and review/override actions.
+* **Ops**: create rogue plugin test harness, document audit retention policy, and validate data freshness checks.
+
+---
+
 ## Final Thought
 
 AI systems are not unreliable because they are new.
