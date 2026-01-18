@@ -1,283 +1,276 @@
-Below is a **free-form, technical README** written as if this project were discovered by another engineer six months from now and they’re trying to understand *why it exists and how it works*.
+# 🎬 Digital Billboard Manager
 
-No episode framing.
-No storytelling gimmicks.
-Just architecture, intent, and trade-offs.
+> A professional digital billboard application built with SLOP microkernel architecture, featuring AI-powered content generation, dynamic plugin management, and intuitive billboard creation.
 
-You can drop this directly into `README.md`.
+![Architecture](https://img.shields.io/badge/Architecture-SLOP-00ff66)
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
+## 🌟 Features
+
+### 🎨 **Digital Billboard Creation**
+- **Bold Typography**: Large fonts (48px-84px) optimized for visibility
+- **High-Contrast Colors**: Eye-catching color combinations
+- **Minimal Text**: Auto-validation (max 7 words/line, 3 lines)
+- **Focal Images**: AI-generated or uploaded visuals
+- **Template System**: 4 pre-configured professional templates
+
+### 🤖 **AI Integration**
+- **Image Generation**: OpenAI GPT-5 with DALL-E 3 fallback
+- **Message Generation**: Rule-based content creation
+- **Smart Templates**: Context-aware billboard designs
+
+### ⚡ **SLOP Architecture**
+- **Microkernel**: Lightweight core system
+- **Plugin Marketplace**: Dynamic load/unload plugins
+- **Real-time Logs**: Comprehensive system monitoring
+- **Hot Reload**: Update plugins without restart
+
+### 🔄 **Dynamic Features**
+- **Content Rotation**: Automatic billboard cycling
+- **Live Preview**: Real-time billboard display
+- **View Tracking**: Engagement analytics
+- **Personalization**: User-specific configurations
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────┐
+│           SLOP Microkernel              │
+├─────────────────────────────────────────┤
+│  ┌────────────┐      ┌──────────────┐  │
+│  │  Billboard │      │    OpenAI    │  │
+│  │   Plugin   │      │    Plugin    │  │
+│  └────────────┘      └──────────────┘  │
+├─────────────────────────────────────────┤
+│         Kernel Management               │
+│  • Register    • Boot    • Execute      │
+│  • Unregister  • Report  • Status       │
+└─────────────────────────────────────────┘
+         │                    │
+         ▼                    ▼
+   Express Server      Frontend UI
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- OpenAI API Key
+
+### Installation
+
+```bash
+# Clone repository
+cd /workspaces/microkernel-server
+
+# Install dependencies
+cd server
+npm install
+
+# Set up environment
+echo "OPENAI_API_KEY=your-api-key-here" > .env
+
+# Start server
+node index.js
+```
+
+### Access Application
+Open browser: `http://localhost:3000`
+
+## 📦 Project Structure
+
+```
+microkernel-server/
+├── server/
+│   ├── index.js                 # Express server & kernel setup
+│   ├── kernel.js                # SLOP microkernel core
+│   ├── package.json             # Dependencies
+│   └── plugins/
+│       ├── billboard.plugin.js  # Billboard management
+│       └── openai.plugin.js     # AI integration
+├── public/
+│   ├── index.html              # Complete UI application
+│   └── images/                 # Static assets
+├── BILLBOARD_GUIDE.md          # Comprehensive documentation
+└── README.md                   # This file
+```
+
+## 🎯 Usage
+
+### 1. Create a Billboard
+
+```javascript
+// Via UI: Click "Create Billboard" tab
+// Via API:
+POST /run/billboard
+{
+  "action": "create",
+  "text": "HUGE SALE\n50% OFF\nLIMITED TIME",
+  "bgColor": "#FF0000",
+  "textColor": "#FFFFFF",
+  "fontSize": "72px"
+}
+```
+
+### 2. Generate AI Content
+
+```javascript
+// Generate Message
+POST /run/billboard
+{
+  "action": "generateMessage",
+  "topic": "Summer Sale",
+  "template": "sale"
+}
+
+// Generate Image
+POST /run/llm
+{
+  "action": "generateImage",
+  "prompt": "Happy shoppers with bags"
+}
+```
+
+### 3. Manage Plugins
+
+```javascript
+// Load plugin
+POST /plugin/billboard
+
+// Unload plugin
+DELETE /plugin/billboard
+
+// Check status
+GET /status
+```
+
+## 🎨 Templates
+
+| Template | Color Scheme | Use Case |
+|----------|-------------|----------|
+| **Sale/Promotion** | Red/White | Discounts, special offers |
+| **Announcement** | Blue/Yellow | News, updates |
+| **Brand Awareness** | Black/Green | Company messaging |
+| **Event Promotion** | Purple/White | Events, conferences |
+
+## 🔌 Plugin Development
+
+Create custom plugins:
+
+```javascript
+// my-plugin.js
+export class MyPlugin {
+  async init() {
+    console.log('Plugin initialized');
+  }
+  
+  async execute(payload) {
+    return { result: 'Custom logic here' };
+  }
+}
+
+// Register in index.js
+import { MyPlugin } from './plugins/my-plugin.js';
+kernel.register('myPlugin', new MyPlugin());
+```
+
+## 🛠️ API Reference
+
+### Kernel Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/boot` | Boot kernel |
+| GET | `/status` | Plugin status |
+| POST | `/run/:plugin` | Execute plugin |
+| POST | `/plugin/:name` | Load plugin |
+| DELETE | `/plugin/:name` | Unload plugin |
+
+### Billboard Actions
+
+- `create` - Create new billboard
+- `update` - Update existing billboard
+- `get` - Retrieve billboard by ID
+- `list` - List all billboards
+- `delete` - Delete billboard
+- `generateMessage` - AI message generation
+- `getTemplates` - Get available templates
+
+## 📊 Digital Billboard Best Practices
+
+### ✅ DO
+- Use bold, large fonts (64px+)
+- High-contrast color combinations
+- Keep text under 7 words per line
+- Maximum 3 lines of text
+- Single focal image
+- Clear call-to-action
+
+### ❌ DON'T
+- Use small or thin fonts
+- Low-contrast colors
+- Write long paragraphs
+- Clutter with multiple images
+- Use complex messaging
+
+## 🎯 NFR Compliance
+
+- **Performance**: Vanilla JS, no frameworks
+- **Scalability**: Plugin-based architecture
+- **Maintainability**: Clear separation of concerns
+- **Usability**: Intuitive 4-tab interface
+- **Reliability**: Error handling & fallbacks
+- **Security**: Environment variables for secrets
+
+## 🧪 Testing
+
+```bash
+# Test billboard creation
+curl -X POST http://localhost:3000/run/billboard \
+  -H "Content-Type: application/json" \
+  -d '{"action":"list"}'
+
+# Test plugin status
+curl http://localhost:3000/status
+```
+
+## 📈 Future Roadmap
+
+- [ ] Database persistence (MongoDB/PostgreSQL)
+- [ ] User authentication & authorization
+- [ ] Billboard scheduling system
+- [ ] A/B testing framework
+- [ ] Advanced analytics dashboard
+- [ ] Export to video/image formats
+- [ ] Multi-language support
+- [ ] Real-time collaboration
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing`)
+5. Open Pull Request
+
+## 📝 License
+
+MIT License - see LICENSE file for details
+
+## 🙏 Acknowledgments
+
+- **SLOP Architecture**: Microkernel design pattern
+- **OpenAI**: AI-powered image & text generation
+- **Express.js**: Web framework
+- **Digital Billboard Industry**: Best practice guidelines
+
+## 📞 Support
+
+- 📖 [Full Documentation](BILLBOARD_GUIDE.md)
+- 🐛 Report Issues
+- 💬 Community Discussions
 
 ---
 
-# Slop Architecture – Microkernel for AI Workloads
-
-## Overview
-
-This project explores a **microkernel-style architecture for AI workloads**, implemented using **vanilla JavaScript** concepts and executed across **browser and server boundaries**.
-
-The core idea is simple:
-
-> Treat AI not as application logic, but as **untrusted, supervised compute**.
-
-Instead of embedding AI calls directly into UI or business logic, the system introduces a **microkernel** that:
-
-* boots plugins
-* executes them under supervision
-* enforces timeouts
-* isolates failures
-* exposes explicit system state
-
-The result is an execution model closer to an operating system than a typical web application.
-
----
-
-## Why a Microkernel for AI?
-
-AI systems violate many assumptions of traditional software:
-
-* execution time is unpredictable
-* failures are non-deterministic
-* APIs change rapidly
-* responses are probabilistic
-* cost and latency are externalized
-
-Embedding AI directly into application code hides these realities.
-
-A microkernel **forces them into the open**.
-
-In this design:
-
-* AI is just another plugin
-* plugins can fail independently
-* the kernel survives plugin failure
-* failure is a *state*, not an exception
-
----
-
-## Architectural Principles
-
-### 1. Kernel Minimalism
-
-The kernel is intentionally small. It knows how to:
-
-* register plugins
-* initialize them
-* execute them
-* enforce execution boundaries
-* track status
-
-It does **not** know:
-
-* what the plugin does
-* whether it is “AI”
-* whether it talks to a network
-* whether it is safe or correct
-
-This separation is deliberate.
-
----
-
-### 2. Plugins Are Untrusted
-
-Every plugin is treated as hostile by default.
-
-A plugin can:
-
-* crash during initialization
-* throw during execution
-* never return
-* consume unbounded time
-
-The kernel handles each case explicitly.
-
-Typical plugin states:
-
-* `REGISTERED`
-* `ACTIVE`
-* `CRASHED_ON_LOAD`
-* `CRASHED_RUNTIME`
-* `QUARANTINED`
-
-This mirrors how real systems classify failure.
-
----
-
-### 3. Execution Is Supervised
-
-Plugin execution is wrapped in:
-
-* promise normalization
-* execution timeouts
-* failure detection
-* quarantine on non-termination
-
-This is not defensive coding.
-This is **policy enforcement**.
-
-If a plugin does not return within its time budget, it is removed from service.
-
----
-
-### 4. Browser Is a Console, Not a Runtime
-
-Early experiments attempted to run AI plugins directly in the browser.
-
-This failed for valid reasons:
-
-* SDKs are not browser-global
-* secrets cannot be protected
-* load order is nondeterministic
-* execution cannot be preempted safely
-
-Rather than working around this, the architecture accepts the constraint:
-
-> **The browser is a control surface, not a trust boundary.**
-
-The browser UI issues commands.
-The kernel executes them elsewhere.
-
----
-
-### 5. Server-Side Kernel Execution
-
-The kernel runs in Node.js, hosted in a reproducible environment using **GitHub Codespaces** and a **devcontainer**.
-
-Benefits:
-
-* secure handling of API keys
-* deterministic runtime
-* ability to terminate misbehaving plugins
-* clean separation between UI and execution
-
-The browser communicates with the kernel via HTTP, similar to system calls.
-
----
-
-## System Components
-
-### Microkernel
-
-Responsibilities:
-
-* plugin lifecycle management
-* execution supervision
-* state reporting
-
-Non-responsibilities:
-
-* business logic
-* AI logic
-* UI rendering
-* retries or heuristics
-
-This keeps the kernel stable as the system evolves.
-
----
-
-### Plugins
-
-Plugins encapsulate behavior.
-
-Examples:
-
-* LLM plugin (OpenAI)
-* Logger plugin
-* Rogue / infinite plugin (for testing supervision)
-
-Each plugin exposes:
-
-* optional `init()`
-* mandatory `execute()`
-
-Plugins do not communicate with each other.
-All coordination flows through the kernel.
-
----
-
-### Browser UI
-
-The UI is intentionally minimal.
-
-It provides:
-
-* kernel boot
-* plugin execution
-* rogue plugin triggering
-* system status inspection
-
-The UI has **no knowledge** of AI, timeouts, or failure handling.
-
-It simply displays what the kernel reports.
-
----
-
-## Failure as a First-Class Concept
-
-Most applications treat failure as an edge case.
-
-This system treats failure as a **core operating condition**.
-
-Examples:
-
-* A plugin that never resolves is quarantined
-* A plugin that crashes on load is blocked permanently
-* A plugin that fails during execution is marked unstable
-* The kernel remains operational throughout
-
-This mirrors how operating systems, databases, and distributed systems survive in production.
-
----
-
-## What This Is Not
-
-This project is not:
-
-* a framework
-* an AI wrapper
-* a UI demo
-* a chatbot
-* a production-ready system
-
-It is an **architectural experiment**.
-
-Its value lies in making failure visible, explicit, and survivable.
-
----
-
-## Intended Audience
-
-This project is useful for:
-
-* engineers designing AI-heavy systems
-* architects thinking about AI reliability
-* teams integrating multiple AI providers
-* anyone tired of embedding AI calls directly into application code
-
----
-
-## Possible Extensions
-
-The architecture naturally supports:
-
-* plugin budgets
-* retry policies
-* circuit breakers
-* plugin prioritization
-* distributed kernels
-* multiple AI providers
-* observability and tracing
-
-Crucially, these can be added **without changing the UI**.
-
----
-
-## Final Thought
-
-AI systems are not unreliable because they are new.
-
-They are unreliable because we treat them as libraries instead of **processes**.
-
-This project explores what happens when we stop doing that.
-
-The answer is not perfection.
-
-The answer is survivability.
+**Built with ❤️ using SLOP Architecture** | **Version 1.0.0** | **January 2026**
