@@ -1,6 +1,6 @@
 # 🎬 Digital Billboard Manager
 
-> A professional digital billboard application built with SLOP microkernel architecture, featuring AI-powered content generation, dynamic plugin management, and intuitive billboard creation.
+> A professional digital billboard application built with SLOP microkernel architecture, featuring AI-powered content generation, dynamic plugin management, and intuitive billboard creation with a Facebook-like social feed interface.
 
 ![Architecture](https://img.shields.io/badge/Architecture-SLOP-00ff66)
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
@@ -9,28 +9,31 @@
 ## 🌟 Features
 
 ### 🎨 **Digital Billboard Creation**
-- **Bold Typography**: Large fonts (48px-84px) optimized for visibility
-- **High-Contrast Colors**: Eye-catching color combinations
+- **Facebook-like Feed**: Modern 3-column social media interface
+- **Bold Typography**: Large fonts (32px-72px) optimized for visibility
+- **High-Contrast Colors**: Eye-catching 2026 saturated color palettes
 - **Minimal Text**: Auto-validation (max 7 words/line, 3 lines)
-- **Focal Images**: AI-generated or uploaded visuals
-- **Template System**: 4 pre-configured professional templates
+- **Quick Templates**: One-click style selection
+- **Three Creation Modes**: Simple, Advanced, and AI-powered
+
+### 📱 **SLOP Architecture** (Server-Local-Optimistic-Progressive)
+- **Server-rendered**: RESTful API integration with microkernel
+- **Local-first**: IndexedDB persistence for offline support
+- **Optimistic updates**: Instant UI feedback, background sync
+- **Progressive enhancement**: Works offline, enhanced when online
 
 ### 🤖 **AI Integration**
 - **Image Generation**: OpenAI GPT-5 with DALL-E 3 fallback
-- **Message Generation**: Rule-based content creation
+- **Message Generation**: AI-powered billboard content
 - **Smart Templates**: Context-aware billboard designs
+- **Fallback System**: Local generation when AI unavailable
 
-### ⚡ **SLOP Architecture**
-- **Microkernel**: Lightweight core system
-- **Plugin Marketplace**: Dynamic load/unload plugins
-- **Real-time Logs**: Comprehensive system monitoring
-- **Hot Reload**: Update plugins without restart
-
-### 🔄 **Dynamic Features**
-- **Content Rotation**: Automatic billboard cycling
-- **Live Preview**: Real-time billboard display
-- **View Tracking**: Engagement analytics
-- **Personalization**: User-specific configurations
+### 🔄 **Social Features**
+- **Like System**: Heart/unlike billboards
+- **Share Functionality**: Native share API support
+- **Delete/Edit**: Manage your billboards
+- **Real-time Stats**: Live likes, views, and activity tracking
+- **Time Stamps**: Relative time display (just now, 5m ago, etc.)
 
 ## 🏗️ Architecture
 
