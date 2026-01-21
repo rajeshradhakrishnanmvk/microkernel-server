@@ -306,6 +306,131 @@
     display: block;
   }
 
+  /* Enhancement Options - Unified UI */
+  .enhancement-toggle {
+    background: rgba(131, 56, 236, 0.2);
+    border: 2px solid #8338ec;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 16px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .enhancement-toggle:hover {
+    background: rgba(131, 56, 236, 0.3);
+    border-color: #00ff88;
+  }
+
+  .enhancement-toggle strong {
+    color: #00ff88;
+  }
+
+  #enhancement-icon {
+    display: inline-block;
+    transition: transform 0.3s;
+    color: #00ff88;
+    font-weight: bold;
+  }
+
+  #enhancement-icon.expanded {
+    transform: rotate(90deg);
+  }
+
+  .enhancement-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+  }
+
+  .enhancement-panel.expanded {
+    max-height: 2000px;
+  }
+
+  .enhancement-section {
+    background: rgba(10, 10, 10, 0.5);
+    border: 1px solid #2a3f5f;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(131, 56, 236, 0.1);
+  }
+
+  .section-header:hover {
+    background: rgba(131, 56, 236, 0.2);
+  }
+
+  .section-header strong {
+    color: #ffffff;
+  }
+
+  .section-icon {
+    display: inline-block;
+    transition: transform 0.3s;
+    color: #00ff88;
+    font-weight: bold;
+    width: 16px;
+  }
+
+  .section-icon.expanded {
+    transform: rotate(90deg);
+  }
+
+  .section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 16px;
+  }
+
+  .section-content.expanded {
+    max-height: 800px;
+    padding: 16px;
+  }
+
+  .action-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #8338ec 0%, #ff006e 100%);
+    border: 3px solid #ffffff;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(131, 56, 236, 0.4);
+    margin-top: 8px;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(131, 56, 236, 0.6);
+  }
+
+  .ai-btn {
+    background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%);
+    color: #000000;
+  }
+
+  .magf-btn {
+    background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
+  }
+
   .create-input {
     width: 100%;
     background: #0a0a0a;
@@ -678,6 +803,160 @@
       grid-template-columns: 1fr;
     }
   }
+
+  /* System Log Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s;
+  }
+
+  .modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-content {
+    background: #16213e;
+    border: 3px solid #00ff66;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 255, 102, 0.3);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #00ff66;
+  }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #00ff66;
+  }
+
+  .close-btn {
+    background: #ff006e;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .log-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .log-filter {
+    background: #0a0a0a;
+    border: 2px solid #2a3f5f;
+    color: #00ff66;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  .log-entry {
+    background: #0a0a0a;
+    border-left: 4px solid #00ff66;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+  }
+
+  .log-entry.ERROR {
+    border-left-color: #ff006e;
+  }
+
+  .log-entry.WARN {
+    border-left-color: #ffaa00;
+  }
+
+  .log-entry.INFO {
+    border-left-color: #3a86ff;
+  }
+
+  .log-entry.DEBUG {
+    border-left-color: #888;
+  }
+
+  .log-timestamp {
+    color: #888;
+    font-size: 10px;
+  }
+
+  .log-level {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 9px;
+    margin: 0 6px;
+  }
+
+  .log-level.ERROR {
+    background: #ff006e;
+    color: white;
+  }
+
+  .log-level.WARN {
+    background: #ffaa00;
+    color: black;
+  }
+
+  .log-level.INFO {
+    background: #3a86ff;
+    color: white;
+  }
+
+  .log-level.DEBUG {
+    background: #888;
+    color: white;
+  }
+
+  .log-plugin {
+    color: #00ff66;
+    font-weight: 700;
+  }
+
+  .log-message {
+    color: #fff;
+    margin-top: 4px;
+  }
+
+  .log-data {
+    color: #aaa;
+    margin-top: 4px;
+    font-size: 10px;
+  }
+
 </style>
 </head>
 <body>
@@ -692,6 +971,7 @@
       <span class="status-dot"></span>
       <span id="kernel-status">SLOP Active</span>
     </div>
+    <button class="nav-btn" onclick="showSystemLog()">📋 SYSTEM LOG</button>
     <button class="nav-btn" onclick="scrollToTop()">↑ TOP</button>
     <button class="nav-btn" onclick="refreshFeed()">↻ REFRESH</button>
   </div>
@@ -731,98 +1011,144 @@
   <!-- Center Feed -->
   <div class="feed-container">
     
-    <!-- Create Billboard Box -->
+    <!-- Create Billboard Box - Unified UI -->
     <div class="create-box">
       <h2>✨ Create Billboard</h2>
       
-      <!-- Mode Tabs -->
-      <div class="create-tabs">
-        <button class="create-tab active" onclick="switchCreateTab('simple')">🎨 Simple</button>
-        <button class="create-tab" onclick="switchCreateTab('advanced')">⚙️ Advanced</button>
-        <button class="create-tab" onclick="switchCreateTab('ai')">🤖 AI Generate</button>
+      <!-- Main Input Area -->
+      <textarea 
+        id="billboard-input" 
+        class="create-input" 
+        placeholder="What's on your billboard?&#10;Be bold, be creative!"
+        rows="3"
+        oninput="updatePreview()"
+      ></textarea>
+
+      <!-- Quick Color Themes -->
+      <div class="create-options">
+        <div class="color-btn active" style="background: #7700ff;" onclick="selectColor('#7700ff', '#ffff00')" title="Purple on Yellow"></div>
+        <div class="color-btn" style="background: #ff0088;" onclick="selectColor('#ff0088', '#00ff88')" title="Hot Pink on Lime"></div>
+        <div class="color-btn" style="background: #0088ff;" onclick="selectColor('#0088ff', '#ffaa00')" title="Blue on Orange"></div>
+        <div class="color-btn" style="background: #00ffcc;" onclick="selectColor('#00ffcc', '#ff0066')" title="Cyan on Magenta"></div>
+        <div class="color-btn" style="background: #ffff00;" onclick="selectColor('#ffff00', '#7700ff')" title="Yellow on Purple"></div>
+        <div class="color-btn" style="background: #000000; border-color: #00ff88;" onclick="selectColor('#000000', '#00ff88')" title="Black on Lime"></div>
       </div>
 
-      <!-- Simple Tab -->
-      <div id="tab-simple" class="tab-content active">
-        <textarea 
-          id="billboard-input" 
-          class="create-input" 
-          placeholder="WHAT'S ON YOUR BILLBOARD?&#10;Max 7 words per line. Be BOLD!"
-          rows="3"
-        ></textarea>
-
-        <div class="create-options">
-          <div class="color-btn active" style="background: #7700ff;" onclick="selectColor('#7700ff', '#ffff00')" title="Purple on Yellow"></div>
-          <div class="color-btn" style="background: #ff0088;" onclick="selectColor('#ff0088', '#00ff88')" title="Hot Pink on Lime"></div>
-          <div class="color-btn" style="background: #0088ff;" onclick="selectColor('#0088ff', '#ffaa00')" title="Blue on Orange"></div>
-          <div class="color-btn" style="background: #00ffcc;" onclick="selectColor('#00ffcc', '#ff0066')" title="Cyan on Magenta"></div>
-          <div class="color-btn" style="background: #ffff00;" onclick="selectColor('#ffff00', '#7700ff')" title="Yellow on Purple"></div>
-          <div class="color-btn" style="background: #000000; border-color: #00ff88;" onclick="selectColor('#000000', '#00ff88')" title="Black on Lime"></div>
-        </div>
+      <!-- Enhancement Options - Collapsible -->
+      <div class="enhancement-toggle" onclick="toggleEnhancements()">
+        <span id="enhancement-icon">▶</span> <strong>Enhancement Options</strong> 
+        <span style="font-size: 11px; color: #888;">(AI, Animation, Custom Colors)</span>
       </div>
 
-      <!-- Advanced Tab -->
-      <div id="tab-advanced" class="tab-content">
-        <div class="form-group">
-          <label>Billboard Text</label>
-          <textarea id="billboard-text-advanced" class="create-input" rows="3"></textarea>
+      <div id="enhancement-options" class="enhancement-panel">
+        
+        <!-- AI Generation Section -->
+        <div class="enhancement-section">
+          <div class="section-header" onclick="toggleSection('ai')">
+            <span class="section-icon" id="ai-icon">▶</span>
+            <strong>🤖 AI Generate Content</strong>
+          </div>
+          <div id="section-ai" class="section-content">
+            <div class="form-group">
+              <label>Topic/Theme</label>
+              <input type="text" id="ai-topic" placeholder="e.g., Summer Sale, New Product">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Style</label>
+                <select id="ai-template">
+                  <option value="sale">Sale/Promotion</option>
+                  <option value="announcement">Announcement</option>
+                  <option value="brand">Brand Awareness</option>
+                  <option value="event">Event Promotion</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Image Prompt</label>
+                <input type="text" id="image-prompt" placeholder="Optional">
+              </div>
+            </div>
+            <button class="action-btn ai-btn" onclick="generateWithAI()">
+              🤖 Generate with AI
+            </button>
+          </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Background Color</label>
-            <input type="color" id="bg-color" value="#7700ff">
+        <!-- MAGF Animation Section -->
+        <div class="enhancement-section">
+          <div class="section-header" onclick="toggleSection('magf')">
+            <span class="section-icon" id="magf-icon">▶</span>
+            <strong>🎬 MAGF Animation</strong>
           </div>
-          <div class="form-group">
-            <label>Text Color</label>
-            <input type="color" id="text-color" value="#ffff00">
+          <div id="section-magf" class="section-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Animation Type</label>
+                <select id="magf-animation">
+                  <option value="pulse">Pulse Effect</option>
+                  <option value="slide">Slide In</option>
+                  <option value="bounce">Bounce</option>
+                  <option value="fade">Fade In/Out</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Duration (sec)</label>
+                <input type="number" id="magf-duration" value="3" min="1" max="10">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>FPS</label>
+                <input type="number" id="magf-fps" value="15" min="10" max="30">
+              </div>
+              <div class="form-group">
+                <label style="opacity: 0;">Spacer</label>
+                <button class="action-btn magf-btn" onclick="createMAGFBillboard(event)">
+                  🎬 Create MAGF
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Font Size</label>
-            <select id="font-size">
-              <option value="32px">Small (32px)</option>
-              <option value="48px" selected>Medium (48px)</option>
-              <option value="64px">Large (64px)</option>
-              <option value="72px">XL (72px)</option>
-            </select>
+        <!-- Advanced Customization Section -->
+        <div class="enhancement-section">
+          <div class="section-header" onclick="toggleSection('advanced')">
+            <span class="section-icon" id="advanced-icon">▶</span>
+            <strong>⚙️ Advanced Customization</strong>
           </div>
-          <div class="form-group">
-            <label>Rotation (ms)</label>
-            <input type="number" id="rotation-speed" value="5000" min="1000" step="1000">
+          <div id="section-advanced" class="section-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Background Color</label>
+                <input type="color" id="bg-color" value="#7700ff" onchange="updateCustomColors()">
+              </div>
+              <div class="form-group">
+                <label>Text Color</label>
+                <input type="color" id="text-color" value="#ffff00" onchange="updateCustomColors()">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Font Size</label>
+                <select id="font-size">
+                  <option value="32px">Small (32px)</option>
+                  <option value="48px" selected>Medium (48px)</option>
+                  <option value="64px">Large (64px)</option>
+                  <option value="72px">XL (72px)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Rotation Speed (ms)</label>
+                <input type="number" id="rotation-speed" value="5000" min="1000" step="1000">
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
 
-      <!-- AI Tab -->
-      <div id="tab-ai" class="tab-content">
-        <div class="form-group">
-          <label>Topic/Theme</label>
-          <input type="text" id="ai-topic" placeholder="e.g., Summer Sale, New Product">
-        </div>
-
-        <div class="form-group">
-          <label>Style</label>
-          <select id="ai-template">
-            <option value="sale">Sale/Promotion</option>
-            <option value="announcement">Announcement</option>
-            <option value="brand">Brand Awareness</option>
-            <option value="event">Event Promotion</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Image Prompt (Optional)</label>
-          <input type="text" id="image-prompt" placeholder="e.g., Happy shoppers with bags">
-        </div>
-
-        <button class="post-btn" onclick="generateWithAI()" style="margin-bottom: 12px;">
-          🤖 GENERATE WITH AI
-        </button>
-      </div>
-
+      <!-- Main Action Button -->
       <button class="post-btn" onclick="createBillboard()">
         📢 POST BILLBOARD
       </button>
@@ -859,6 +1185,16 @@
     </div>
 
     <div class="sidebar-panel">
+      <div class="sidebar-title">📋 System Log</div>
+      <div id="system-log-preview" style="font-size: 10px; color: #888; max-height: 200px; overflow-y: auto;">
+        <div style="padding: 10px; text-align: center;">Loading...</div>
+      </div>
+      <button class="btn-small" onclick="showSystemLog()" style="width: 100%; margin-top: 10px;">
+        View Full Log
+      </button>
+    </div>
+
+    <div class="sidebar-panel">
       <div class="sidebar-title">⚡ SLOP Status</div>
       <div style="font-size: 11px; color: #888; line-height: 1.6;">
         <div style="margin-bottom: 8px;">
@@ -877,6 +1213,41 @@
     </div>
   </div>
 
+</div>
+
+<!-- System Log Modal -->
+<div id="log-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">📋 System Event Log</div>
+      <button class="close-btn" onclick="closeSystemLog()">✕ Close</button>
+    </div>
+    
+    <div class="log-controls">
+      <select class="log-filter" id="log-level-filter" onchange="filterLogs()">
+        <option value="">All Levels</option>
+        <option value="ERROR">Error</option>
+        <option value="WARN">Warning</option>
+        <option value="INFO">Info</option>
+        <option value="DEBUG">Debug</option>
+      </select>
+      
+      <select class="log-filter" id="log-plugin-filter" onchange="filterLogs()">
+        <option value="">All Plugins</option>
+        <option value="KERNEL">Kernel</option>
+        <option value="billboard">Billboard</option>
+        <option value="magf">MAGF</option>
+        <option value="llm">LLM</option>
+      </select>
+      
+      <button class="btn-small" onclick="refreshLogs()">🔄 Refresh</button>
+      <button class="btn-small btn-danger" onclick="clearLogs()">🗑️ Clear</button>
+    </div>
+    
+    <div id="log-entries" style="max-height: 500px; overflow-y: auto;">
+      <div style="text-align: center; color: #888; padding: 20px;">Loading logs...</div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -952,7 +1323,7 @@ function loadBillboardsLocal() {
 }
 
 // ============================================
-// Tab Management
+// Tab Management (Legacy - kept for compatibility)
 // ============================================
 function switchCreateTab(tabName) {
   // Update tabs
@@ -966,6 +1337,48 @@ function switchCreateTab(tabName) {
     content.classList.remove('active');
   });
   document.getElementById(`tab-${tabName}`).classList.add('active');
+}
+
+// ============================================
+// Unified UI Enhancement Options
+// ============================================
+function toggleEnhancements() {
+  const panel = document.getElementById('enhancement-options');
+  const icon = document.getElementById('enhancement-icon');
+  
+  if (panel.classList.contains('expanded')) {
+    panel.classList.remove('expanded');
+    icon.classList.remove('expanded');
+  } else {
+    panel.classList.add('expanded');
+    icon.classList.add('expanded');
+  }
+}
+
+function toggleSection(sectionName) {
+  const content = document.getElementById(`section-${sectionName}`);
+  const icon = document.getElementById(`${sectionName}-icon`);
+  
+  if (content.classList.contains('expanded')) {
+    content.classList.remove('expanded');
+    icon.classList.remove('expanded');
+  } else {
+    content.classList.add('expanded');
+    icon.classList.add('expanded');
+  }
+}
+
+function updatePreview() {
+  // Could add live preview functionality here
+  const text = document.getElementById('billboard-input').value;
+  // Future: update a live preview area
+}
+
+function updateCustomColors() {
+  const bgColor = document.getElementById('bg-color').value;
+  const textColor = document.getElementById('text-color').value;
+  state.selectedBgColor = bgColor;
+  state.selectedTextColor = textColor;
 }
 
 // ============================================
@@ -1300,10 +1713,10 @@ function renderFeed() {
       <!-- Header -->
       <div class="billboard-header">
         <div class="billboard-avatar">
-          ${billboard.author.charAt(0).toUpperCase()}
+          ${billboard.author ? billboard.author.charAt(0).toUpperCase() : 'A'}
         </div>
         <div class="billboard-info">
-          <div class="billboard-author">${billboard.author}</div>
+          <div class="billboard-author">${billboard.author || 'Anonymous'}</div>
           <div class="billboard-time">
             ${getTimeAgo(billboard.timestamp)}
             ${billboard.pending ? '<span style="color: #ffaa00;"> • Syncing...</span>' : ''}
@@ -1420,6 +1833,7 @@ async function loadPlugins() {
     
     const plugins = [
       { name: 'billboard', desc: 'Billboard Manager' },
+      { name: 'magf', desc: 'MAGF Animation' },
       { name: 'llm', desc: 'AI Integration' }
     ];
 
@@ -1459,6 +1873,291 @@ async function togglePlugin(name, isActive) {
     await loadPlugins();
   } catch (err) {
     console.error('Failed to toggle plugin:', err);
+  }
+}
+
+// ============================================
+// MAGF Billboard Creation
+// ============================================
+async function createMAGFBillboard(event) {
+  // Use the main input instead of separate magf-text input
+  const text = document.getElementById('billboard-input').value.trim();
+  const animationType = document.getElementById('magf-animation').value;
+  const fps = parseInt(document.getElementById('magf-fps').value);
+  const duration = parseInt(document.getElementById('magf-duration').value);
+
+  if (!text) {
+    alert('Please enter billboard text for MAGF animation');
+    return;
+  }
+
+  try {
+    const btn = event ? event.target : document.querySelector('.post-btn');
+    btn.disabled = true;
+    btn.textContent = '🎬 CREATING MAGF...';
+
+    // Generate frames for MAGF animation
+    const frames = await generateMAGFFrames(text, animationType, fps, duration);
+
+    // Create MAGF file
+    const magfResponse = await fetch('/run/magf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'create',
+        name: `Billboard-${Date.now()}`,
+        frames: frames,
+        fps: fps,
+        duration: duration,
+        metadata: {
+          billboardText: text,
+          animation: animationType
+        }
+      })
+    });
+
+    const magfData = await magfResponse.json();
+
+    if (magfData.result) {
+      // Create billboard with MAGF reference
+      const billboardResponse = await fetch('/run/billboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'create',
+          text: text,
+          magfData: magfData.result.id,
+          bgColor: state.selectedBgColor,
+          textColor: state.selectedTextColor,
+          author: state.currentUser,
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      const billboard = await billboardResponse.json();
+
+      if (billboard.result) {
+        // Add to feed
+        state.billboards.unshift({
+          ...billboard.result,
+          timestamp: new Date(billboard.result.timestamp || Date.now()),
+          likes: 0,
+          liked: false
+        });
+        renderFeed();
+        updateStats();
+
+        // Clear main input
+        document.getElementById('billboard-input').value = '';
+        
+        alert('MAGF Billboard created successfully! 🎬');
+      }
+    }
+
+    btn.disabled = false;
+    btn.textContent = '🎬 CREATE MAGF BILLBOARD';
+
+  } catch (err) {
+    console.error('Failed to create MAGF billboard:', err);
+    alert('Failed to create MAGF billboard. See console for details.');
+    const btn = event ? event.target : document.querySelector('.post-btn');
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '🎬 CREATE MAGF BILLBOARD';
+    }
+  }
+}
+
+async function generateMAGFFrames(text, animationType, fps, duration) {
+  // Generate canvas frames for animation
+  const canvas = document.createElement('canvas');
+  canvas.width = 640;
+  canvas.height = 360;
+  const ctx = canvas.getContext('2d');
+
+  const totalFrames = fps * duration;
+  const frames = [];
+
+  for (let i = 0; i < totalFrames; i++) {
+    const progress = i / totalFrames;
+    
+    // Clear canvas
+    ctx.fillStyle = state.selectedBgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Apply animation
+    ctx.save();
+    applyAnimation(ctx, animationType, progress, canvas.width, canvas.height);
+
+    // Draw text
+    ctx.fillStyle = state.selectedTextColor;
+    ctx.font = 'bold 48px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    const lines = text.split('\n');
+    const lineHeight = 60;
+    const startY = canvas.height / 2 - (lines.length - 1) * lineHeight / 2;
+    
+    lines.forEach((line, index) => {
+      ctx.fillText(line, canvas.width / 2, startY + index * lineHeight);
+    });
+
+    ctx.restore();
+
+    // Convert canvas to blob
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    const arrayBuffer = await blob.arrayBuffer();
+    
+    frames.push({
+      byteLength: arrayBuffer.byteLength,
+      width: canvas.width,
+      height: canvas.height,
+      data: Array.from(new Uint8Array(arrayBuffer))
+    });
+  }
+
+  return frames;
+}
+
+function applyAnimation(ctx, type, progress, width, height) {
+  switch (type) {
+    case 'pulse':
+      const scale = 0.9 + Math.sin(progress * Math.PI * 4) * 0.1;
+      ctx.translate(width / 2, height / 2);
+      ctx.scale(scale, scale);
+      ctx.translate(-width / 2, -height / 2);
+      break;
+    
+    case 'slide':
+      const slideX = progress < 0.3 ? -width + (width * progress / 0.3) : 0;
+      ctx.translate(slideX, 0);
+      break;
+    
+    case 'bounce':
+      const bounceY = progress < 0.5 ? Math.abs(Math.sin(progress * Math.PI * 4)) * 50 : 0;
+      ctx.translate(0, -bounceY);
+      break;
+    
+    case 'fade':
+      const alpha = Math.sin(progress * Math.PI);
+      ctx.globalAlpha = alpha;
+      break;
+  }
+}
+
+// ============================================
+// System Log Management
+// ============================================
+let currentLogs = [];
+let logUpdateInterval = null;
+
+async function loadSystemLog() {
+  try {
+    const level = document.getElementById('log-level-filter')?.value || '';
+    const plugin = document.getElementById('log-plugin-filter')?.value || '';
+    
+    const params = new URLSearchParams();
+    if (level) params.append('level', level);
+    if (plugin) params.append('plugin', plugin);
+    params.append('limit', '100');
+    
+    const response = await fetch(`/logs?${params}`);
+    const logs = await response.json();
+    
+    currentLogs = logs;
+    renderLogs(logs);
+    
+    // Update preview
+    updateLogPreview(logs.slice(-5));
+    
+  } catch (err) {
+    console.error('Failed to load logs:', err);
+  }
+}
+
+function renderLogs(logs) {
+  const container = document.getElementById('log-entries');
+  
+  if (!logs || logs.length === 0) {
+    container.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">No log entries found</div>';
+    return;
+  }
+  
+  container.innerHTML = logs.reverse().map(log => `
+    <div class="log-entry ${log.level}">
+      <div>
+        <span class="log-timestamp">${new Date(log.timestamp).toLocaleTimeString()}</span>
+        <span class="log-level ${log.level}">${log.level}</span>
+        <span class="log-plugin">[${log.plugin}]</span>
+      </div>
+      <div class="log-message">${log.message}</div>
+      ${log.data && Object.keys(log.data).length > 0 ? 
+        `<div class="log-data">${JSON.stringify(log.data)}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function updateLogPreview(logs) {
+  const preview = document.getElementById('system-log-preview');
+  
+  if (!logs || logs.length === 0) {
+    preview.innerHTML = '<div style="padding: 10px; text-align: center;">No recent activity</div>';
+    return;
+  }
+  
+  preview.innerHTML = logs.reverse().map(log => `
+    <div style="margin-bottom: 6px; padding: 4px; background: #0a0a0a; border-radius: 4px;">
+      <span style="color: ${getLevelColor(log.level)}">●</span>
+      <span style="color: #00ff66;">[${log.plugin}]</span>
+      <span style="color: #aaa;">${log.message.substring(0, 30)}${log.message.length > 30 ? '...' : ''}</span>
+    </div>
+  `).join('');
+}
+
+function getLevelColor(level) {
+  const colors = {
+    ERROR: '#ff006e',
+    WARN: '#ffaa00',
+    INFO: '#3a86ff',
+    DEBUG: '#888'
+  };
+  return colors[level] || '#888';
+}
+
+function showSystemLog() {
+  document.getElementById('log-modal').classList.add('active');
+  loadSystemLog();
+  
+  // Auto-refresh logs every 5 seconds
+  if (logUpdateInterval) clearInterval(logUpdateInterval);
+  logUpdateInterval = setInterval(loadSystemLog, 5000);
+}
+
+function closeSystemLog() {
+  document.getElementById('log-modal').classList.remove('active');
+  if (logUpdateInterval) {
+    clearInterval(logUpdateInterval);
+    logUpdateInterval = null;
+  }
+}
+
+function filterLogs() {
+  loadSystemLog();
+}
+
+function refreshLogs() {
+  loadSystemLog();
+}
+
+async function clearLogs() {
+  if (!confirm('Clear all system logs?')) return;
+  
+  try {
+    await fetch('/logs', { method: 'DELETE' });
+    loadSystemLog();
+  } catch (err) {
+    console.error('Failed to clear logs:', err);
   }
 }
 
@@ -1520,6 +2219,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Load plugins
   loadPlugins();
+  
+  // Load system log preview
+  loadSystemLog();
+  
+  // Auto-refresh log preview every 10 seconds
+  setInterval(() => {
+    loadSystemLog();
+  }, 10000);
   
   // Progressive enhancement - load billboards
   // Local data loads first, server syncs in background

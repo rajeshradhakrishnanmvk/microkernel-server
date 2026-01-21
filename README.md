@@ -16,6 +16,14 @@
 - **Quick Templates**: One-click style selection
 - **Three Creation Modes**: Simple, Advanced, and AI-powered
 
+### 🎬 **MAGF (Multimedia Animated Graphics Format)**
+- **Browser-native playback**: No third-party codecs required
+- **Lightweight**: < 10 MB multimedia containers
+- **Video + Audio + Text**: Complete multimedia support
+- **GIF-like looping**: Smooth, seamless animation playback
+- **Web Audio API**: High-quality audio synchronization
+- **Interactive demo**: Create and preview MAGF files in-browser
+
 ### 📱 **SLOP Architecture** (Server-Local-Optimistic-Progressive)
 - **Server-rendered**: RESTful API integration with microkernel
 - **Local-first**: IndexedDB persistence for offline support
@@ -41,10 +49,10 @@
 ┌─────────────────────────────────────────┐
 │           SLOP Microkernel              │
 ├─────────────────────────────────────────┤
-│  ┌────────────┐      ┌──────────────┐  │
-│  │  Billboard │      │    OpenAI    │  │
-│  │   Plugin   │      │    Plugin    │  │
-│  └────────────┘      └──────────────┘  │
+│  ┌────────────┐  ┌──────────┐  ┌─────┐ │
+│  │  Billboard │  │  OpenAI  │  │MAGF │ │
+│  │   Plugin   │  │  Plugin  │  │Plugin│ │
+│  └────────────┘  └──────────┘  └─────┘ │
 ├─────────────────────────────────────────┤
 │         Kernel Management               │
 │  • Register    • Boot    • Execute      │
@@ -91,11 +99,15 @@ microkernel-server/
 │   ├── package.json             # Dependencies
 │   └── plugins/
 │       ├── billboard.plugin.js  # Billboard management
-│       └── openai.plugin.js     # AI integration
+│       ├── openai.plugin.js     # AI integration
+│       ├── magf.plugin.js       # MAGF multimedia
+│       └── MAGF_README.md       # MAGF documentation
 ├── public/
-│   ├── index.html              # Complete UI application
+│   ├── index.html              # Billboard feed UI
+│   ├── magf-demo.html          # MAGF demo/creator
 │   └── images/                 # Static assets
 ├── BILLBOARD_GUIDE.md          # Comprehensive documentation
+├── test-magf.js                # MAGF plugin tests
 └── README.md                   # This file
 ```
 
@@ -140,6 +152,33 @@ POST /run/llm
 ```javascript
 // Load plugin
 POST /plugin/billboard
+
+// Check status
+GET /status
+```
+
+### 4. Create MAGF Animation
+
+```javascript
+// Via UI: Visit /magf-demo.html
+// Via API:
+POST /run/magf
+{
+  "action": "create",
+  "name": "My Animation",
+  "frames": [...],  // Array of image buffers
+  "fps": 15,
+  "subtitles": [
+    { "start": 0, "end": 2, "text": "Hello MAGF!" }
+  ]
+}
+
+// Play MAGF
+GET /magf/:id/player
+
+// Download MAGF
+GET /magf/:id/download
+```
 
 // Unload plugin
 DELETE /plugin/billboard
@@ -248,6 +287,10 @@ curl http://localhost:3000/status
 - [ ] Export to video/image formats
 - [ ] Multi-language support
 - [ ] Real-time collaboration
+- [x] **MAGF multimedia format** (browser-native playback)
+- [ ] MAGF audio recording from microphone
+- [ ] MAGF screen recording support
+- [ ] MAGF to GIF/MP4 conversion
 
 ## 🤝 Contributing
 

@@ -24,6 +24,8 @@ export class BillboardPlugin {
         return this.listBillboards();
       case 'delete':
         return this.deleteBillboard(params.id);
+      case 'like':
+        return this.likeBillboard(params.id, params.liked);
       case 'generateMessage':
         return this.generateMessage(params);
       case 'getTemplates':
@@ -76,6 +78,7 @@ export class BillboardPlugin {
     text = '', 
     imageUrl = '', 
     imageData = '',
+    magfData = null, // MAGF file reference or data
     bgColor = '#000000', 
     textColor = '#FFFFFF', 
     fontSize = '64px',
@@ -89,6 +92,7 @@ export class BillboardPlugin {
       text: this.validateText(text),
       imageUrl,
       imageData, // Base64 image data
+      magfData, // MAGF support
       bgColor,
       textColor,
       fontSize,
@@ -96,6 +100,7 @@ export class BillboardPlugin {
       rotation,
       personalization,
       views: 0,
+      likes: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       active: true
@@ -103,6 +108,25 @@ export class BillboardPlugin {
     
     this.billboards.set(id, billboard);
     return billboard;
+  }
+
+  likeBillboard(id, liked) {
+    const billboard = this.billboards.get(id);
+    if (!billboard) {
+      throw new Error(`Billboard not found: ${id}`);
+    }
+    
+    // Update likes count
+    if (liked && billboard.likes !== undefined) {
+      billboard.likes = (billboard.likes || 0) + 1;
+    } else if (!liked && billboard.likes !== undefined && billboard.likes > 0) {
+      billboard.likes = billboard.likes - 1;
+    }
+    
+    billboard.updatedAt = new Date().toISOString();
+    this.billboards.set(id, billboard);
+    
+    return { id, liked, likes: billboard.likes };
   }
 
   /**
