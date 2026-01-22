@@ -28,6 +28,8 @@ export class BillboardPlugin {
         return this.likeBillboard(params.id, params.liked);
       case 'generateMessage':
         return this.generateMessage(params);
+      case 'generateAIBillboard':
+        return this.generateAIBillboard(params);
       case 'getTemplates':
         return this.templates;
       case 'renderCard':
@@ -79,6 +81,7 @@ export class BillboardPlugin {
     imageUrl = '', 
     imageData = '',
     magfData = null, // MAGF file reference or data
+    audioId = null, // Audio file ID
     bgColor = '#000000', 
     textColor = '#FFFFFF', 
     fontSize = '64px',
@@ -93,6 +96,7 @@ export class BillboardPlugin {
       imageUrl,
       imageData, // Base64 image data
       magfData, // MAGF support
+      audioId, // Audio support
       bgColor,
       textColor,
       fontSize,
@@ -455,5 +459,226 @@ export class BillboardPlugin {
       topic,
       generatedAt: new Date().toISOString()
     };
+  }
+
+  /**
+   * Generate a complete billboard using AI with all advanced options
+   * @param {Object} params - { description, kernel }
+   * @returns {Object} Complete billboard configuration ready to create
+   */
+  async generateAIBillboard({ description, kernel }) {
+    if (!kernel) {
+      throw new Error('Kernel instance required for AI generation');
+    }
+
+    try {
+      // Step 1: Use AI to generate billboard text and colors
+      const textPrompt = `Create a compelling billboard message for: "${description}".
+Rules:
+- Maximum 3 lines
+- Maximum 7 words per line
+- Bold, attention-grabbing text
+- Use ALL CAPS for emphasis
+- Include a clear call-to-action
+
+Also suggest colors that suit the message mood and content:
+- Background color (hex code)
+- Text color (hex code) - ensure high contrast for readability
+- Consider the emotional tone and topic (urgent/calm, fun/serious, luxury/discount, etc.)
+
+Return in this exact format:
+TEXT:
+[billboard text with line breaks]
+BGCOLOR: #hexcode
+TEXTCOLOR: #hexcode`;
+
+      const llmResponse = await kernel.run('llm', {
+        action: 'chat',
+        prompt: textPrompt,
+        model: 'gpt-3.5-turbo'
+      });
+
+      // Extract text from response object
+      const responseText = (typeof llmResponse === 'string' ? llmResponse : llmResponse.result || llmResponse).trim();
+
+      // Parse AI response
+      let billboardText = '';
+      let bgColor = '#000000';
+      let textColor = '#FFFFFF';
+      
+      const textMatch = responseText.match(/TEXT:\s*([\s\S]*?)(?=BGCOLOR:|$)/);
+      const bgColorMatch = responseText.match(/BGCOLOR:\s*(#[0-9A-Fa-f]{6})/);
+      const textColorMatch = responseText.match(/TEXTCOLOR:\s*(#[0-9A-Fa-f]{6})/);
+      
+      if (textMatch) {
+        billboardText = textMatch[1].trim();
+      } else {
+        billboardText = responseText;
+      }
+      
+      if (bgColorMatch) {
+        bgColor = bgColorMatch[1];
+      }
+      
+      if (textColorMatch) {
+        textColor = textColorMatch[1];
+      }
+      
+      // Fallback to template colors if parsing fails
+      if (!bgColorMatch || !textColorMatch) {
+        const template = this.detectTemplate(description);
+        const colors = this.getTemplateColors(template);
+        if (!bgColorMatch) bgColor = colors.bgColor;
+        if (!textColorMatch) textColor = colors.textColor;
+      }
+
+      // Step 2: Determine the best template/style based on description
+      const template = this.detectTemplate(description);
+
+      // Step 3: Generate image if relevant
+      let imageData = '';
+      const needsImage = this.shouldGenerateImage(description);
+      
+      if (needsImage) {
+        try {
+          const imagePrompt = this.createImagePrompt(description);
+          const imageResponse = await kernel.run('llm', {
+            action: 'generateImage',
+            prompt: imagePrompt,
+            description: imagePrompt
+          });
+
+          const imgResult = imageResponse.result || imageResponse;
+          if (imgResult && imgResult.imageBase64) {
+            imageData = `data:image/png;base64,${imgResult.imageBase64}`;
+          }
+        } catch (imgError) {
+          console.warn('Image generation failed, continuing without image:', imgError.message);
+        }
+      }
+
+      // Step 4: Generate audio for the billboard text
+      let audioId = null;
+      try {
+        const audioResponse = await kernel.run('llm', {
+          action: 'generateAudio',
+          text: billboardText,
+          voice: 'coral',
+          instructions: 'Speak in a cheerful and positive tone, perfect for a billboard announcement.',
+          audioId: `billboard_${Date.now()}`
+        });
+
+        const audioResult = audioResponse.result || audioResponse;
+        if (audioResult && audioResult.success) {
+          audioId = audioResult.audioId;
+        }
+      } catch (audioError) {
+        console.warn('Audio generation failed, continuing without audio:', audioError.message);
+      }
+
+      // Step 5: Return complete billboard configuration
+      return {
+        text: this.validateText(billboardText),
+        bgColor: bgColor,
+        textColor: textColor,
+        fontSize: '64px',
+        template: template,
+        imageData: imageData,
+        audioId: audioId,
+        rotation: 5000,
+        author: 'AI Assistant',
+        timestamp: new Date().toISOString(),
+        aiGenerated: true,
+        originalDescription: description
+      };
+
+    } catch (error) {
+      console.error('AI generation failed:', error);
+      
+      // Fallback to rule-based generation
+      const fallback = this.generateMessage({ 
+        topic: description, 
+        template: this.detectTemplate(description) 
+      });
+      
+      const template = this.detectTemplate(description);
+      const colors = this.getTemplateColors(template);
+      
+      return {
+        text: fallback.text,
+        bgColor: colors.bgColor,
+        textColor: colors.textColor,
+        fontSize: '64px',
+        template: template,
+        imageData: '',
+        rotation: 5000,
+        author: 'AI Assistant',
+        timestamp: new Date().toISOString(),
+        aiGenerated: false,
+        fallback: true
+      };
+    }
+  }
+
+  /**
+   * Detect appropriate template based on description keywords
+   */
+  detectTemplate(description) {
+    const lowerDesc = description.toLowerCase();
+    
+    if (lowerDesc.match(/sale|discount|off|deal|save|price/)) {
+      return 'sale';
+    } else if (lowerDesc.match(/event|join|attend|conference|meetup|party/)) {
+      return 'event';
+    } else if (lowerDesc.match(/new|launch|announce|introducing|release/)) {
+      return 'announcement';
+    } else if (lowerDesc.match(/brand|quality|trust|experience/)) {
+      return 'brand';
+    }
+    
+    return 'announcement'; // Default
+  }
+
+  /**
+   * Get colors for a template
+   */
+  getTemplateColors(templateId) {
+    const template = this.templates.find(t => t.id === templateId);
+    if (template) {
+      return {
+        bgColor: template.bgColor,
+        textColor: template.textColor,
+        fontSize: template.fontSize
+      };
+    }
+    // Default colors
+    return {
+      bgColor: '#7700ff',
+      textColor: '#ffff00',
+      fontSize: '64px'
+    };
+  }
+
+  /**
+   * Determine if an image should be generated
+   */
+  shouldGenerateImage(description) {
+    const imageKeywords = [
+      'product', 'car', 'phone', 'food', 'restaurant', 'hotel',
+      'vacation', 'travel', 'fashion', 'clothing', 'furniture',
+      'tech', 'gadget', 'device', 'app', 'game'
+    ];
+    
+    const lowerDesc = description.toLowerCase();
+    return imageKeywords.some(keyword => lowerDesc.includes(keyword));
+  }
+
+  /**
+   * Create an optimized image prompt for billboard
+   */
+  createImagePrompt(description) {
+    return `Professional billboard advertisement image for ${description}. 
+Style: Bold, eye-catching, high contrast, minimal details, suitable for large outdoor display. 
+Composition: Centered subject, clean background, vibrant colors.`;
   }
 }

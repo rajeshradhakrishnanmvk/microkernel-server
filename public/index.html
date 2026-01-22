@@ -260,6 +260,17 @@
     border-radius: 28px 32px 30px 35px;
   }
 
+  .ai-quick-create {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 204, 255, 0.15) 100%);
+    border: 3px solid #00ff88;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 
+      0 4px 20px rgba(0, 255, 136, 0.3),
+      inset 0 0 20px rgba(0, 255, 136, 0.1);
+  }
+
   .create-box h2 {
     font-size: 20px;
     color: #00ff88;
@@ -1015,143 +1026,26 @@
     <div class="create-box">
       <h2>✨ Create Billboard</h2>
       
-      <!-- Main Input Area -->
-      <textarea 
-        id="billboard-input" 
-        class="create-input" 
-        placeholder="What's on your billboard?&#10;Be bold, be creative!"
-        rows="3"
-        oninput="updatePreview()"
-      ></textarea>
-
-      <!-- Quick Color Themes -->
-      <div class="create-options">
-        <div class="color-btn active" style="background: #7700ff;" onclick="selectColor('#7700ff', '#ffff00')" title="Purple on Yellow"></div>
-        <div class="color-btn" style="background: #ff0088;" onclick="selectColor('#ff0088', '#00ff88')" title="Hot Pink on Lime"></div>
-        <div class="color-btn" style="background: #0088ff;" onclick="selectColor('#0088ff', '#ffaa00')" title="Blue on Orange"></div>
-        <div class="color-btn" style="background: #00ffcc;" onclick="selectColor('#00ffcc', '#ff0066')" title="Cyan on Magenta"></div>
-        <div class="color-btn" style="background: #ffff00;" onclick="selectColor('#ffff00', '#7700ff')" title="Yellow on Purple"></div>
-        <div class="color-btn" style="background: #000000; border-color: #00ff88;" onclick="selectColor('#000000', '#00ff88')" title="Black on Lime"></div>
-      </div>
-
-      <!-- Enhancement Options - Collapsible -->
-      <div class="enhancement-toggle" onclick="toggleEnhancements()">
-        <span id="enhancement-icon">▶</span> <strong>Enhancement Options</strong> 
-        <span style="font-size: 11px; color: #888;">(AI, Animation, Custom Colors)</span>
-      </div>
-
-      <div id="enhancement-options" class="enhancement-panel">
-        
-        <!-- AI Generation Section -->
-        <div class="enhancement-section">
-          <div class="section-header" onclick="toggleSection('ai')">
-            <span class="section-icon" id="ai-icon">▶</span>
-            <strong>🤖 AI Generate Content</strong>
-          </div>
-          <div id="section-ai" class="section-content">
-            <div class="form-group">
-              <label>Topic/Theme</label>
-              <input type="text" id="ai-topic" placeholder="e.g., Summer Sale, New Product">
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Style</label>
-                <select id="ai-template">
-                  <option value="sale">Sale/Promotion</option>
-                  <option value="announcement">Announcement</option>
-                  <option value="brand">Brand Awareness</option>
-                  <option value="event">Event Promotion</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Image Prompt</label>
-                <input type="text" id="image-prompt" placeholder="Optional">
-              </div>
-            </div>
-            <button class="action-btn ai-btn" onclick="generateWithAI()">
-              🤖 Generate with AI
-            </button>
+      <!-- AI-Powered One-Click Creation -->
+      <div class="ai-quick-create">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <span style="font-size: 24px;">🤖</span>
+          <div>
+            <strong style="font-size: 16px; color: #00ff66;">AI-Powered Billboard Creation</strong>
+            <div style="font-size: 11px; color: #888;">Just describe your billboard and we'll create it instantly!</div>
           </div>
         </div>
-
-        <!-- MAGF Animation Section -->
-        <div class="enhancement-section">
-          <div class="section-header" onclick="toggleSection('magf')">
-            <span class="section-icon" id="magf-icon">▶</span>
-            <strong>🎬 MAGF Animation</strong>
-          </div>
-          <div id="section-magf" class="section-content">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Animation Type</label>
-                <select id="magf-animation">
-                  <option value="pulse">Pulse Effect</option>
-                  <option value="slide">Slide In</option>
-                  <option value="bounce">Bounce</option>
-                  <option value="fade">Fade In/Out</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Duration (sec)</label>
-                <input type="number" id="magf-duration" value="3" min="1" max="10">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>FPS</label>
-                <input type="number" id="magf-fps" value="15" min="10" max="30">
-              </div>
-              <div class="form-group">
-                <label style="opacity: 0;">Spacer</label>
-                <button class="action-btn magf-btn" onclick="createMAGFBillboard(event)">
-                  🎬 Create MAGF
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Advanced Customization Section -->
-        <div class="enhancement-section">
-          <div class="section-header" onclick="toggleSection('advanced')">
-            <span class="section-icon" id="advanced-icon">▶</span>
-            <strong>⚙️ Advanced Customization</strong>
-          </div>
-          <div id="section-advanced" class="section-content">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Background Color</label>
-                <input type="color" id="bg-color" value="#7700ff" onchange="updateCustomColors()">
-              </div>
-              <div class="form-group">
-                <label>Text Color</label>
-                <input type="color" id="text-color" value="#ffff00" onchange="updateCustomColors()">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Font Size</label>
-                <select id="font-size">
-                  <option value="32px">Small (32px)</option>
-                  <option value="48px" selected>Medium (48px)</option>
-                  <option value="64px">Large (64px)</option>
-                  <option value="72px">XL (72px)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Rotation Speed (ms)</label>
-                <input type="number" id="rotation-speed" value="5000" min="1000" step="1000">
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <input 
+          type="text" 
+          id="ai-quick-input" 
+          class="create-input" 
+          placeholder="e.g., 'New Product Launch' or 'Summer Sale 50% Off' or 'Join our Event Saturday'"
+          style="margin-bottom: 12px; height: 50px; font-size: 16px;"
+        />
+        <button class="post-btn" onclick="createAIBillboard()" style="background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%); border-color: #00ff88;">
+          ✨ CREATE WITH AI (ONE CLICK!)
+        </button>
       </div>
-
-      <!-- Main Action Button -->
-      <button class="post-btn" onclick="createBillboard()">
-        📢 POST BILLBOARD
-      </button>
     </div>
 
     <!-- Billboard Feed -->
@@ -1499,6 +1393,168 @@ function generateFallbackMessage(topic, template) {
 }
 
 // ============================================
+// AI-Powered One-Click Billboard Creation
+// ============================================
+async function createAIBillboard() {
+  const description = document.getElementById('ai-quick-input').value.trim();
+  
+  if (!description) {
+    alert('Please enter a description for your billboard (e.g., "New Product Launch")');
+    return;
+  }
+
+  try {
+    const btn = event.target;
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '🤖 AI GENERATING...';
+
+    // Call the billboard plugin's AI generation endpoint
+    const response = await fetch('/run/billboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'generateAIBillboard',
+        description: description
+      })
+    });
+
+    const data = await response.json();
+    
+    // Check for errors in response
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    if (data.result) {
+      btn.textContent = '✨ CREATING BILLBOARD...';
+      
+      // Show AI generation details in console for debugging
+      console.log('🤖 AI Generated Billboard:', {
+        text: data.result.text,
+        template: data.result.template,
+        hasImage: !!data.result.imageData,
+        hasAudio: !!data.result.audioId,
+        aiGenerated: data.result.aiGenerated
+      });
+      
+      // The AI has generated all the options, now create the billboard
+      const billboardConfig = data.result;
+      
+      // Optimistic Update - Add immediately to UI
+      const optimisticBillboard = {
+        id: Date.now(),
+        text: billboardConfig.text,
+        bgColor: billboardConfig.bgColor,
+        textColor: billboardConfig.textColor,
+        fontSize: billboardConfig.fontSize,
+        imageData: billboardConfig.imageData || '',
+        audioId: billboardConfig.audioId || null,
+        author: billboardConfig.author || 'AI Assistant',
+        timestamp: new Date(),
+        likes: 0,
+        liked: false,
+        pending: true,
+        aiGenerated: true
+      };
+
+      // Add to state immediately (Optimistic)
+      state.billboards.unshift(optimisticBillboard);
+      renderFeed();
+
+      // Clear input
+      document.getElementById('ai-quick-input').value = '';
+
+      // Save to local DB
+      if (db) {
+        saveBillboardLocal(optimisticBillboard);
+      }
+
+      // Now create on server
+      try {
+        const createResponse = await fetch('/run/billboard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'create',
+            text: billboardConfig.text,
+            bgColor: billboardConfig.bgColor,
+            textColor: billboardConfig.textColor,
+            fontSize: billboardConfig.fontSize,
+            imageData: billboardConfig.imageData || '',
+            audioId: billboardConfig.audioId || null,
+            template: billboardConfig.template,
+            rotation: billboardConfig.rotation || 5000,
+            author: billboardConfig.author || 'AI Assistant',
+            timestamp: new Date().toISOString()
+          })
+        });
+
+        const createData = await createResponse.json();
+        
+        if (createData.result) {
+          // Update with server ID
+          const billboard = state.billboards.find(b => b.id === optimisticBillboard.id);
+          if (billboard) {
+            billboard.id = createData.result.id;
+            billboard.pending = false;
+          }
+        }
+      } catch (err) {
+        console.error('Server sync failed, using local data:', err);
+        optimisticBillboard.pending = false;
+      }
+
+      updateStats();
+      
+      // Success message with details
+      const features = [];
+      if (billboardConfig.imageData) features.push('🖼️ Image');
+      if (billboardConfig.audioId) features.push('🔊 Audio');
+      if (billboardConfig.aiGenerated) features.push('🤖 AI Text');
+      
+      const featureText = features.length > 0 ? ` (${features.join(', ')})` : '';
+      
+      btn.textContent = `✅ CREATED${featureText}`;
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }, 3000);
+      
+      // Scroll to see the new billboard
+      window.scrollTo({ top: document.querySelector('.feed-container').offsetTop, behavior: 'smooth' });
+      
+    } else if (data.error) {
+      throw new Error(data.error);
+    } else {
+      throw new Error('AI generation returned no result');
+    }
+    
+  } catch (err) {
+    console.error('AI billboard creation failed:', err);
+    
+    // Show detailed error message
+    let errorMsg = `Failed to create AI billboard:\n\n${err.message}`;
+    
+    // Add helpful suggestions based on error type
+    if (err.message.includes('API') || err.message.includes('key')) {
+      errorMsg += '\n\n💡 Check that your OPENAI_API_KEY is set correctly.';
+    } else if (err.message.includes('network') || err.message.includes('fetch')) {
+      errorMsg += '\n\n💡 Check your internet connection.';
+    } else if (err.message.includes('trim')) {
+      errorMsg += '\n\n💡 The AI response format was unexpected. Try again.';
+    }
+    
+    errorMsg += '\n\nYou can still create billboards manually using the form above.';
+    
+    alert(errorMsg);
+    
+    event.target.disabled = false;
+    event.target.textContent = '✨ CREATE WITH AI (ONE CLICK!)';
+  }
+}
+
+// ============================================
 // Create Billboard (Optimistic Update)
 // ============================================
 async function createBillboard() {
@@ -1709,7 +1765,7 @@ function renderFeed() {
   }
 
   feed.innerHTML = state.billboards.map((billboard) => `
-    <div class="billboard-card">
+    <div class="billboard-card" data-billboard-id="${billboard.id}">
       <!-- Header -->
       <div class="billboard-header">
         <div class="billboard-avatar">
@@ -1720,6 +1776,7 @@ function renderFeed() {
           <div class="billboard-time">
             ${getTimeAgo(billboard.timestamp)}
             ${billboard.pending ? '<span style="color: #ffaa00;"> • Syncing...</span>' : ''}
+            ${billboard.aiGenerated ? '<span style="color: #00ff66;"> • AI Generated</span>' : ''}
           </div>
         </div>
       </div>
@@ -1730,6 +1787,14 @@ function renderFeed() {
         <div class="billboard-text" style="color: ${billboard.textColor};">
           ${billboard.text}
         </div>
+        ${billboard.audioId ? `
+          <div style="position: absolute; bottom: 20px; right: 20px;">
+            <button class="action-btn" onclick="playBillboardAudio('${billboard.audioId}', ${billboard.id})" 
+                    style="background: rgba(0, 255, 102, 0.2); border-color: #00ff66; padding: 8px 16px;">
+              🔊 PLAY AUDIO
+            </button>
+          </div>
+        ` : ''}
       </div>
       
       <!-- Footer Actions -->
@@ -1818,6 +1883,56 @@ function shareBillboard(id) {
       alert(`Billboard shared!\n\n"${billboard.text}"`);
     }
   }
+}
+
+// ============================================
+// Audio Playback
+// ============================================
+let currentAudio = null;
+
+function playBillboardAudio(audioId, billboardId) {
+  // Stop any currently playing audio
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+
+  // Create new audio element
+  const audio = new Audio(`/audio/${audioId}`);
+  currentAudio = audio;
+
+  // Update button state
+  const card = document.querySelector(`[data-billboard-id="${billboardId}"]`);
+  if (card) {
+    const btn = card.querySelector('button[onclick*="playBillboardAudio"]');
+    if (btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '⏸️ PLAYING...';
+      btn.style.background = 'linear-gradient(135deg, #00ff66 0%, #00cc52 100%)';
+      
+      audio.onended = () => {
+        btn.innerHTML = originalText;
+        btn.style.background = 'rgba(0, 255, 102, 0.2)';
+        currentAudio = null;
+      };
+      
+      audio.onerror = () => {
+        btn.innerHTML = '❌ ERROR';
+        btn.style.background = 'rgba(255, 0, 110, 0.2)';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = 'rgba(0, 255, 102, 0.2)';
+        }, 2000);
+        currentAudio = null;
+      };
+    }
+  }
+
+  // Play the audio
+  audio.play().catch(err => {
+    console.error('Failed to play audio:', err);
+    alert('Failed to play audio. Please try again.');
+  });
 }
 
 // ============================================

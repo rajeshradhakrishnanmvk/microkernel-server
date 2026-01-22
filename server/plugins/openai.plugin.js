@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+import fs from "fs";
+import path from "path";
 
 export class OpenAIPlugin {
   async init() {
@@ -9,6 +11,9 @@ export class OpenAIPlugin {
     this.client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
+    
+    // Store audio files
+    this.audioFiles = new Map();
   }
 
   async execute(payload) {
@@ -17,6 +22,8 @@ export class OpenAIPlugin {
     switch (action) {
       case 'generateImage':
         return this.generateImage(params);
+      case 'generateAudio':
+        return this.generateAudio(params);
       case 'chat':
       default:
         return this.chat(params);
@@ -79,5 +86,35 @@ export class OpenAIPlugin {
         throw new Error(`Image generation failed: ${error.message}`);
       }
     }
+  }
+
+  async generateAudio({ text, voice = "coral", instructions = "Speak in a cheerful and positive tone.", audioId }) {
+    try {
+      const mp3 = await this.client.audio.speech.create({
+        model: "gpt-4o-mini-tts",
+        voice: voice,
+        input: text,
+        instructions: instructions,
+      });
+
+      const buffer = Buffer.from(await mp3.arrayBuffer());
+      
+      // Store the audio buffer with an ID
+      const id = audioId || Date.now().toString();
+      this.audioFiles.set(id, buffer);
+      
+      return {
+        success: true,
+        audioId: id,
+        size: buffer.length,
+        format: 'mp3'
+      };
+    } catch (error) {
+      throw new Error(`Audio generation failed: ${error.message}`);
+    }
+  }
+
+  getAudioFile(audioId) {
+    return this.audioFiles.get(audioId);
   }
 }

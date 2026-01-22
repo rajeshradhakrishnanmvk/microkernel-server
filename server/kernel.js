@@ -93,7 +93,11 @@ export class AIMicrokernel {
 
     try {
       this.log('DEBUG', name, 'Executing plugin', { action: payload.action });
-      const result = await this.plugins[name].execute(payload);
+      
+      // Pass kernel instance to plugins that need it (for AI generation, etc.)
+      const enhancedPayload = { ...payload, kernel: this };
+      
+      const result = await this.plugins[name].execute(enhancedPayload);
       this.log('DEBUG', name, 'Plugin execution successful', { action: payload.action });
       return { result };
     } catch (e) {

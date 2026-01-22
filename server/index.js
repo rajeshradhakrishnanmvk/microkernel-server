@@ -216,6 +216,30 @@ app.get("/magf/:id/player", async (req, res) => {
   }
 });
 
+// ----- Audio endpoint -----
+app.get("/audio/:audioId", (req, res) => {
+  try {
+    const { audioId } = req.params;
+    const llmPlugin = kernel.plugins.llm;
+    
+    if (!llmPlugin || !llmPlugin.getAudioFile) {
+      return res.status(500).json({ error: "Audio plugin not available" });
+    }
+    
+    const audioBuffer = llmPlugin.getAudioFile(audioId);
+    
+    if (!audioBuffer) {
+      return res.status(404).json({ error: "Audio file not found" });
+    }
+    
+    res.setHeader('Content-Type', 'audio/mpeg');
+    res.setHeader('Content-Length', audioBuffer.length);
+    res.send(audioBuffer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(3000, () => {
   console.log("Kernel server running at http://localhost:3000");
 });
